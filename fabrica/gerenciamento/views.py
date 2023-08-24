@@ -28,21 +28,20 @@ def testing(request):
     return HttpResponse(template.render(context, request))
 
 def cliente_view(request):
-    form = ClienteForm()
-    if request.method == 'POST':
-        form = ClienteForm(request.POST)
-        endereco_form = EnderecoForm(request.POST)
-        if form.is_valid() and endereco_form.is_valid():
-            endereco = endereco_form.save()
-            cliente = form.save(commit=False)
-            cliente.endereco = endereco
-            cliente.save()
-            return redirect('/clientes')
-    else:
-        form = ClienteForm()
-        endereco_form = EnderecoForm()
+    form = ClienteForm(request.POST or None)
+    endereco_form = EnderecoForm(request.POST or None)
 
-    return render(request, 'add/adicionar_cliente.html', {'form': form, 'endereco_form': endereco_form})
+    if request.method == 'POST':
+        if form.is_valid() and endereco_form.is_valid():
+            cliente = form.save() # Save the Cliente instance first.
+            
+            endereco = endereco_form.save(commit=False) # Don't save the Endereco instance yet.
+            endereco.cliente = cliente # Associate the saved Cliente instance with the Endereco instance.
+            endereco.save() # Now save the Endereco instance.
+            
+            return redirect('#')
+
+    return render(request, 'add/adicionar_cliente.html', {'form': form, 'endereco_form': endereco_form })
 
 def operador_view(request, id=None):
     if id:

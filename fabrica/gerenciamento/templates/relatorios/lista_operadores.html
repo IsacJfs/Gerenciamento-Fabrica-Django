@@ -1,0 +1,25 @@
+{% extends "base/master.html" %}
+
+{% block title %}
+    Lista de Operadores
+{% endblock %}
+
+{% block content %}
+<section>
+    <h1 class="card-title">Operadores</h1>
+    <table class="table table-secondary table-striped">
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Nome</th>
+            <th scope="col">Cargo</th>
+        </tr>
+        {% for operador in operadores %}
+        <tr>
+            <td>{{ operador.id }}</td>
+            <td>{{ operador.nome }}</td>
+            <td>{{ operador.cargo }}</td>
+        </tr>
+        {% endfor %}
+    </table>    
+</section>
+{% endblock %}

@@ -5,15 +5,14 @@ from django import forms
 class ClienteForm(forms.ModelForm):
     class Meta:
         model = Cliente
-        fields = ['codigo', 'cnpj_cpf', 'razao_social', 'nome_fantasia', 'celular', 'email', 'atividade_economica_profissao']
+        fields = ['cnpj_cpf', 'razao_social', 'nome_fantasia', 'celular', 'email', 'atividade_economica_profissao']
         widgets = {
-            'codigo': forms.TextInput(attrs={'class': 'form-control'}),
             'cnpj_cpf': forms.TextInput(attrs={'class': 'form-control'}),
             'razao_social': forms.TextInput(attrs={'class': 'form-control'}),
             'nome_fantasia': forms.TextInput(attrs={'class': 'form-control'}),
             'celular': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
-            'atividade_economica_profissao': forms.TextInput(attrs={'class': 'form-control'})
+            'atividade_economica_profissao': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
 class EnderecoForm(forms.ModelForm):
@@ -21,13 +20,12 @@ class EnderecoForm(forms.ModelForm):
         model = Endereco
         fields = ['rua', 'numero', 'complemento', 'cidade', 'estado', 'cep']
         widgets = {
-            'cliente': ClienteForm(),
             'rua': forms.TextInput(attrs={'class': 'form-control'}),
             'numero': forms.TextInput(attrs={'class': 'form-control'}),
             'complemento': forms.TextInput(attrs={'class': 'form-control'}),
             'cidade': forms.TextInput(attrs={'class': 'form-control'}),
             'estado': forms.TextInput(attrs={'class': 'form-control'}),
-            'cep': forms.TextInput(attrs={'class': 'form-control'})
+            'cep': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
 class OperadorForm(forms.ModelForm):

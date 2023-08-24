@@ -1,12 +1,12 @@
 {% extends "base/master.html" %}
 
 {% block title %}
-    Lista de Clientes
+    Lista de Ordem de Serviço
 {% endblock %}
 
 {% block content %}
 <section>
-    <h1 class="card-title">Clientes</h1>
+    <h1 class="card-title">Ordens de Serviço</h1>
     <table class="table table-secondary table-striped">
         <tr>
             <th scope="col">#</th>
@@ -20,7 +20,7 @@
         </tr>
         {% for cliente in clientes %}
         <tr>
-            <td>{{ cliente.codigo }}</td>
+            <td>{{ cliente.matricula }}</td>
             <td>{{ cliente.cnpj_cpf }}</td>
             <td>{{ cliente.razao_social }}</td>
             <td>{{ cliente.nome_fantasia }}</td>

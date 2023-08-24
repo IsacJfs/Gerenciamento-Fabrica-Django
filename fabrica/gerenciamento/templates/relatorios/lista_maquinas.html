@@ -1,0 +1,59 @@
+{% extends "base/master.html" %}
+
+{% block title %}
+    Maquinário
+{% endblock %}
+
+{% block content %}
+<section>
+    <h1 class="card-title">Maquinas de Extrusão</h1>
+    <table class="table table-secondary table-striped">
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Marca</th>
+            <th scope="col">Modelo</th>
+        </tr>
+        {% for maquina in maquinas %}
+        <tr>
+            <td>{{ maquina.id }}</td>
+            <td>{{ maquina.marca }}</td>
+            <td>{{ maquina.modelo }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</section>
+<section>
+    <h1 class="card-title">Maquinas de Impressão</h1>
+    <table class="table table-secondary table-striped">
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Marca</th>
+            <th scope="col">Modelo</th>
+        </tr>
+        {% for maquina in maquinas %}
+        <tr>
+            <td>{{ maquina.id }}</td>
+            <td>{{ maquina.marca }}</td>
+            <td>{{ maquina.modelo }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</section>
+<section>
+    <h1 class="card-title">Maquinas de Corte</h1>
+    <table class="table table-secondary table-striped">
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Marca</th>
+            <th scope="col">Modelo</th>
+        </tr>
+        {% for maquina in maquinas %}
+        <tr>
+            <td>{{ maquina.id }}</td>
+            <td>{{ maquina.marca }}</td>
+            <td>{{ maquina.modelo }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</section>
+{% endblock %}
