@@ -22,9 +22,9 @@ from .views import (
 urlpatterns = [
     path('', master, name='master'),
     path('main', main, name='main'),
-    path('addCliente', cliente_view, name='addCliente'),
+    path('adicionar_cliente/', cliente_view, name='cliente_create'),
     path('testing/', testing, name='testing'),
-    
+
     path('clientes', lista_clientes, name='lista_clientes'),
 
     path('operador/', operador_view, name='operador_create'),

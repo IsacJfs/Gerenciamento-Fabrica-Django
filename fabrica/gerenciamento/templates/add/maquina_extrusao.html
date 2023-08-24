@@ -1,0 +1,30 @@
+{% extends "base/master.html" %}
+
+{% block title %}Adicionar Maquina de Extrusão{% endblock title %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <strong class="card-title">Adicionar Maquina de Extrusão</strong>
+            </div>
+            <div class="card-body">
+                <div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            <h3>Adicionar</h3>
+                            {{ form.as_p }}
+                            <input type="submit" value="Enviar">
+                        </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

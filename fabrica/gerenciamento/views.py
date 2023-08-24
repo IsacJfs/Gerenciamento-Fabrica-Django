@@ -42,7 +42,7 @@ def cliente_view(request):
         form = ClienteForm()
         endereco_form = EnderecoForm()
 
-    return render(request, 'addCliente', {'form': form, 'endereco_form': endereco_form})
+    return render(request, 'add/adicionar_cliente.html', {'form': form, 'endereco_form': endereco_form})
 
 def operador_view(request, id=None):
     if id:
@@ -57,7 +57,7 @@ def operador_view(request, id=None):
             return redirect('url_para_lista_de_operadores')
 
     context = {'form': form}
-    return render(request, 'operador_template.html', context)
+    return render(request, 'add/operador.html', context)
 
 def maquina_extrusao_view(request):
     if request.method == 'POST':
@@ -67,7 +67,7 @@ def maquina_extrusao_view(request):
             return redirect('alguma_url')
     else:
         form = MaquinaExtrusaoForm()
-    return render(request, 'seu_template.html', {'form': form})
+    return render(request, 'add/maquina_extrusao.html', {'form': form})
 
 def maquina_impressao_view(request):
     if request.method == 'POST':
@@ -77,7 +77,7 @@ def maquina_impressao_view(request):
             return redirect('alguma_url')
     else:
         form = MaquinaImpressaoForm()
-    return render(request, 'seu_template.html', {'form': form})
+    return render(request, 'add/maquina_impressao.html', {'form': form})
 
 def maquina_corte_view(request):
     if request.method == 'POST':
@@ -87,27 +87,27 @@ def maquina_corte_view(request):
             return redirect('alguma_url')
     else:
         form = MaquinaCorteForm()
-    return render(request, 'seu_template.html', {'form': form})
+    return render(request, 'add/maquina_corte.html', {'form': form})
 
 def produto_view(request):
     if request.method == 'POST':
         form = ProdutoForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('alguma_url')
+            return redirect('/produtos')
     else:
         form = ProdutoForm()
-    return render(request, 'seu_template.html', {'form': form})
+    return render(request, 'add/produto.html', {'form': form})
 
 def ordem_servico_view(request):
     if request.method == 'POST':
         form = OrdemServicoForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('alguma_url')
+            return redirect('/ordem_servico')
     else:
         form = OrdemServicoForm()
-    return render(request, 'seu_template.html', {'form': form})
+    return render(request, 'add/ordem_servico.html', {'form': form})
 
 def tinta_view(request):
     if request.method == 'POST':
@@ -117,7 +117,7 @@ def tinta_view(request):
             return redirect('alguma_url')
     else:
         form = TintaForm()
-    return render(request, 'seu_template.html', {'form': form})
+    return render(request, 'add/tinta.html', {'form': form})
 
 def ingredientes_view(request):
     if request.method == 'POST':
@@ -127,7 +127,7 @@ def ingredientes_view(request):
             return redirect('alguma_url')
     else:
         form = IngredientesForm()
-    return render(request, 'seu_template.html', {'form': form})
+    return render(request, 'add/ingredientes.html', {'form': form})
 
 def extrusao_view(request):
     if request.method == 'POST':
