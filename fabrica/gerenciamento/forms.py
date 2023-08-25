@@ -1,4 +1,28 @@
-from .models import Cliente, Endereco, Operador, MaquinaExtrusao ,MaquinaImpressao ,MaquinaCorte ,Produto ,OrdemServico ,Tinta ,TintaOrdemServico ,Ingredientes ,IngredienteOrdemServico ,Extrusao ,Impressao ,Corte
+from .models import (
+        Cliente,
+        Endereco,
+        Operador,
+        MaquinaExtrusao,
+        MaquinaImpressao,
+        MaquinaCorte,
+        Tratamento,
+        Material,
+        Acabamento,
+        CorProduto,
+        Produto,
+        OrdemServico,
+        StatusServico,
+        Tinta,
+        TintaOrdemServico,
+        Ingredientes,
+        IngredienteOrdemServico,
+        Extrusao,
+        Impressao,
+        Corte,
+        ProdutoExtrusao,
+        ProdutoImpressao,
+        ProdutoCorte
+        )
 from django import forms
 
 
@@ -71,27 +95,25 @@ class MaquinaCorteForm(forms.ModelForm):
 class ProdutoForm(forms.ModelForm):
     class Meta:
         model = Produto
-        fields = ['id', 'tipo', 'material', 'cor', 'acabamento']
+        fields = ['id', 'tipo', 'cor_produto', 'acabamento_produto', 'tratamento_produto', 'material_produto']
         widgets = {
             'id': forms.TextInput(attrs={'class': 'form-control'}),
             'tipo': forms.TextInput(attrs={'class': 'form-control'}),
-            'material': forms.TextInput(attrs={'class': 'form-control'}),
-            'cor': forms.TextInput(attrs={'class': 'form-control'}),
-            'acabamento': forms.TextInput(attrs={'class': 'form-control'})
+            'cor_produto' : forms.TextInput(attrs={'class': 'form-control'}),
+            'acabamento_produto' : forms.TextInput(attrs={'class': 'form-control'}),
+            'tratamento_produto' : forms.TextInput(attrs={'class': 'form-control'}),
+            'material_produto' : forms.TextInput(attrs={'class': 'form-control'})
         }
 
 class OrdemServicoForm(forms.ModelForm):
     class Meta:
         model = OrdemServico
-        fields = ['id', 'cliente', 'produto', 'status', 'data', 'tratamento', 'tipo_material']
+        fields = ['id', 'cliente', 'produto', 'observacao']
         widgets = {
             'id': forms.TextInput(attrs={'class': 'form-control'}),
             'cliente': forms.Select(attrs={'class': 'form-control'}),
             'produto': forms.Select(attrs={'class': 'form-control'}),
-            'status': forms.TextInput(attrs={'class': 'form-control'}),
-            'data': forms.DateInput(attrs={'class': 'form-control'}),
-            'tratamento': forms.TextInput(attrs={'class': 'form-control'}),
-            'tipo_material': forms.TextInput(attrs={'class': 'form-control'})
+            'observacao': forms.Select(attrs={'class': 'form-control'})
         }
 
 class TintaForm(forms.ModelForm):

@@ -1,0 +1,38 @@
+{% extends "base/master.html" %}
+
+{% block title %}
+    Lista de Clientes
+{% endblock %}
+
+{% block content %}
+<section>
+    <h1 class="card-title">Clientes</h1>
+    <table class="table table-secondary table-striped">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">CNPJ/CPF</th>
+            <th scope="col">Razão Social</th>
+            <th scope="col">Nome Fantasia</th>
+            <th scope="col">Celular</th>
+            <th scope="col">Email</th>
+            <th scope="col">Atividade Econômica/Profissão</th>
+            <th scope="col">Endereço</th>
+        </tr>
+        {% for cliente in cliente %}
+        <tr>
+            <td>{{ cliente.codigo }}</td>
+            <td>{{ cliente.cnpj_cpf }}</td>
+            <td>{{ cliente.razao_social }}</td>
+            <td>{{ cliente.nome_fantasia }}</td>
+            <td>{{ cliente.celular }}</td>
+            <td>{{ cliente.email }}</td>
+            <td>{{ cliente.atividade_economica_profissao }}</td>
+            {% for endereco in cliente.endereco_set.all %}
+            <td>{{ endereco.rua }}, {{ endereco.numero }} - {{ endereco.cidade }}, {{ endereco.estado }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+
+</section>
+{% endblock %}

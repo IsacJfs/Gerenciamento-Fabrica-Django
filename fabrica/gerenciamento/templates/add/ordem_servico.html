@@ -16,7 +16,9 @@
                         <form method="post">
                             {% csrf_token %}
                             <h3>Ordem de serviço:</h3>
-                            {{ form.as_p }}
+                            {{ ordem_form }}
+                            <h3>Produto:</h3>
+                            {{ produto_form }}
                             <input type="submit" value="Enviar">
                         </form>
                         </div>
