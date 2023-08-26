@@ -10,6 +10,11 @@ def lista_clientes(request):
     context = {'cliente': cliente}
     return render(request, 'visualizacao/cliente.html', context)
 
+def lista_produtos(request):
+    produto = Produto.objects.select_related('cor_produto', 'acabamento_produto', 'tratamento_produto', 'material_produto').all()
+    context = {'produtos': produto}
+    return render(request, 'visualizacao/produtos.html', context)
+
 def lista_endereco(request, codigo):
     cliente = Cliente.objects.get(codigo=codigo)
     endereco = Endereco.objects.get(cliente=cliente)

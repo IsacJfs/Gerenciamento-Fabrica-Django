@@ -1,0 +1,32 @@
+{% extends "base/master.html" %}
+
+{% block title %}
+    Lista de Produtos
+{% endblock %}
+
+{% block content %}
+<section>
+    <h1 class="card-title">Produtos</h1>
+    <table class="table table-secondary table-striped">
+        <tr>
+            <th scope="col">id</th>
+            <th scope="col">tipo</th>
+            <th scope="col">cor_produto</th>
+            <th scope="col">acabamento_produto</th>
+            <th scope="col">tratamento_produto</th>
+            <th scope="col">material_produto</th>
+        </tr>
+        {% for produto in produtos %}
+        <tr>
+            <td>{{ produto.id }}</td>
+            <td>{{ produto.tipo }}</td>
+            <td>{{ produto.cor_produto.cor_produto }}</td>
+            <td>{{ produto.acabamento_produto.acabamento_produto }}</td>
+            <td>{{ produto.tratamento_produto.tratamento_produto }}</td>
+            <td>{{ produto.material_produto.material_produto }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</section>
+{% endblock %}

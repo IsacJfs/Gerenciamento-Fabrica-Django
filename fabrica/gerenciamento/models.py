@@ -5,6 +5,7 @@ class Cliente(models.Model):
     cnpj_cpf = models.CharField(max_length=18, unique=True)
     razao_social = models.CharField(max_length=255)
     nome_fantasia = models.CharField(max_length=255, blank=True, null=True)
+    telefone = models.CharField(max_length=15)
     celular = models.CharField(max_length=15)
     email = models.EmailField()
     atividade_economica_profissao = models.CharField(max_length=255)
@@ -42,17 +43,29 @@ class Tratamento(models.Model):
     id = models.AutoField(primary_key=True)
     tratamento_produto = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.tratamento_produto
+
 class Material(models.Model):
     id = models.AutoField(primary_key=True)
     material_produto = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.material_produto
 
 class Acabamento(models.Model):
     id = models.AutoField(primary_key=True)
     acabamento_produto = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.acabamento_produto
+
 class CorProduto(models.Model):
     id = models.AutoField(primary_key=True)
     cor_produto = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.cor_produto
 
 class Produto(models.Model):
     id = models.AutoField(primary_key=True)

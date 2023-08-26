@@ -2,8 +2,50 @@ from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from django.template import loader
-from .forms import ClienteForm ,EnderecoForm ,OperadorForm ,MaquinaExtrusaoForm ,MaquinaImpressaoForm ,MaquinaCorteForm ,ProdutoForm ,OrdemServicoForm ,TintaForm ,TintaOrdemServicoForm ,IngredientesForm ,IngredienteOrdemServicoForm ,ExtrusaoForm ,ImpressaoForm ,CorteForm
-from .models import Cliente, Endereco, Operador, MaquinaExtrusao ,MaquinaImpressao ,MaquinaCorte ,Produto ,OrdemServico ,Tinta ,TintaOrdemServico ,Ingredientes ,IngredienteOrdemServico ,Extrusao ,Impressao ,Corte
+from .forms import (ClienteForm,
+        EnderecoForm,
+        OperadorForm,
+        MaquinaExtrusaoForm,
+        MaquinaImpressaoForm,
+        MaquinaCorteForm,
+        ProdutoForm,
+        OrdemServicoForm,
+        TintaForm,
+        TintaOrdemServicoForm,
+        IngredientesForm,
+        IngredienteOrdemServicoForm,
+        ExtrusaoForm,
+        ImpressaoForm,
+        CorteForm,
+        AcabamentoForm,
+        TratamentoForm,
+        MaterialForm,
+        CorForm)
+from .models import (
+        Cliente,
+        Endereco,
+        Operador,
+        MaquinaExtrusao,
+        MaquinaImpressao,
+        MaquinaCorte,
+        Tratamento,
+        Material,
+        Acabamento,
+        CorProduto,
+        Produto,
+        OrdemServico,
+        StatusServico,
+        Tinta,
+        TintaOrdemServico,
+        Ingredientes,
+        IngredienteOrdemServico,
+        Extrusao,
+        Impressao,
+        Corte,
+        ProdutoExtrusao,
+        ProdutoImpressao,
+        ProdutoCorte
+        )
 
 def cliente_add(request):
     form = ClienteForm(request.POST or None)
@@ -66,7 +108,7 @@ def maquina_corte_add(request):
         form = MaquinaCorteForm()
     return render(request, 'add/maquina_corte.html', {'form': form})
 
-def produto_add(request):
+def produto_add_old(request):
     if request.method == 'POST':
         form = ProdutoForm(request.POST)
         if form.is_valid():
@@ -76,15 +118,16 @@ def produto_add(request):
         form = ProdutoForm()
     return render(request, 'add/produto.html', {'form': form})
 
-# def ordem_servico_add(request):
-#     if request.method == 'POST':
-#         form = OrdemServicoForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('/ordem_servico')
-#     else:
-#         form = OrdemServicoForm()
-#     return render(request, 'add/ordem_servico.html', {'form': form})
+def produto_add(request):
+    if request.method == 'POST':
+        produto_form = ProdutoForm(request.POST)
+        if produto_form.is_valid():
+            produto_form.save()
+            return redirect('../main')  # Substitua pelo nome da URL de destino
+    else:
+        produto_form = ProdutoForm()
+
+    return render(request, 'add/produto.html', {'produto_form': produto_form})
 
 def ordem_servico_add(request):
     ordem_form = OrdemServicoForm(request.POST or None)

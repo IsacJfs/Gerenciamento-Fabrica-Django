@@ -16,7 +16,11 @@
                         <form method="post">
                             {% csrf_token %}
                             <h3>Produto</h3>
-                            {{ form.as_p }}
+                            {{ produto_form.tipo.label_tag }} : {{ produto_form.tipo }}
+                            {{ produto_form.cor_produto.label_tag }}: {{ produto_form.cor_produto }}
+                            {{ produto_form.acabamento_produto.label_tag }}: {{ produto_form.acabamento_produto }}
+                            {{ produto_form.tratamento_produto.label_tag }}: {{ produto_form.tratamento_produto }}
+                            {{ produto_form.material_produto.label_tag }}: {{ produto_form.material_produto }}
                             <input type="submit" value="Enviar">
                         </form>
                         </div>

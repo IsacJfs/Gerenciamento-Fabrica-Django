@@ -29,12 +29,13 @@ from django import forms
 class ClienteForm(forms.ModelForm):
     class Meta:
         model = Cliente
-        fields = ['cnpj_cpf', 'razao_social', 'nome_fantasia', 'celular', 'email', 'atividade_economica_profissao']
+        fields = ['cnpj_cpf', 'razao_social', 'nome_fantasia', 'celular', 'telefone', 'email', 'atividade_economica_profissao']
         widgets = {
             'cnpj_cpf': forms.TextInput(attrs={'class': 'form-control'}),
             'razao_social': forms.TextInput(attrs={'class': 'form-control'}),
             'nome_fantasia': forms.TextInput(attrs={'class': 'form-control'}),
             'celular': forms.TextInput(attrs={'class': 'form-control'}),
+            'telefone': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
             'atividade_economica_profissao': forms.TextInput(attrs={'class': 'form-control'}),
         }
@@ -92,18 +93,36 @@ class MaquinaCorteForm(forms.ModelForm):
             'modelo': forms.TextInput(attrs={'class': 'form-control'})
         }
 
-class ProdutoForm(forms.ModelForm):
+class ProdutoFormOLD(forms.ModelForm):
     class Meta:
         model = Produto
         fields = ['id', 'tipo', 'cor_produto', 'acabamento_produto', 'tratamento_produto', 'material_produto']
         widgets = {
             'id': forms.TextInput(attrs={'class': 'form-control'}),
             'tipo': forms.TextInput(attrs={'class': 'form-control'}),
-            'cor_produto' : forms.TextInput(attrs={'class': 'form-control'}),
-            'acabamento_produto' : forms.TextInput(attrs={'class': 'form-control'}),
-            'tratamento_produto' : forms.TextInput(attrs={'class': 'form-control'}),
-            'material_produto' : forms.TextInput(attrs={'class': 'form-control'})
+            'cor_produto' : forms.Select(attrs={'class': 'form-control'}),
+            'acabamento_produto' : forms.Select(attrs={'class': 'form-control'}),
+            'tratamento_produto' : forms.Select(attrs={'class': 'form-control'}),
+            'material_produto' : forms.Select(attrs={'class': 'form-control'})
         }
+
+class ProdutoForm(forms.ModelForm):
+    tipo = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    cor_produto = forms.ModelChoiceField(queryset=CorProduto.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
+    acabamento_produto = forms.ModelChoiceField(queryset=Acabamento.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
+    tratamento_produto = forms.ModelChoiceField(queryset=Tratamento.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
+    material_produto = forms.ModelChoiceField(queryset=Material.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
+    class Meta:
+        model = Produto
+        fields = ['id', 'tipo', 'cor_produto', 'acabamento_produto', 'tratamento_produto', 'material_produto']
+        # widgets = {
+        #     'id': forms.TextInput(attrs={'class': 'form-control'}),
+        #     'tipo': forms.TextInput(attrs={'class': 'form-control'}),
+        #     'cor_produto' : forms.Select(attrs={'class': 'form-control'}),
+        #     'acabamento_produto' : forms.Select(attrs={'class': 'form-control'}),
+        #     'tratamento_produto' : forms.Select(attrs={'class': 'form-control'}),
+        #     'material_produto' : forms.Select(attrs={'class': 'form-control'})
+        # }
 
 class OrdemServicoForm(forms.ModelForm):
     class Meta:
@@ -193,3 +212,34 @@ class CorteForm(forms.ModelForm):
             'data': forms.DateInput(attrs={'class': 'form-control'})
         }
 
+class AcabamentoForm(forms.ModelForm):
+    class Meta:
+        model = Acabamento
+        fields = ['acabamento_produto']
+        widgets = {
+            'acabamento_produto': forms.Select(attrs={'class': 'form-control'}),
+        }
+
+class TratamentoForm(forms.ModelForm):
+    class Meta:
+        model = Tratamento
+        fields = ['tratamento_produto']
+        widgets = {
+            'tratamento_produto': forms.Select(attrs={'class': 'form-control'}),
+        }
+
+class MaterialForm(forms.ModelForm):
+    class Meta:
+        model = Material
+        fields = ['material_produto']
+        widgets = {
+            'material_produto': forms.Select(attrs={'class': 'form-control'}),
+        }
+
+class CorForm(forms.ModelForm):
+    class Meta:
+        model = CorProduto
+        fields = ['cor_produto']
+        widgets = {
+            'cor_produto': forms.Select(attrs={'class': 'form-control'}),
+        }

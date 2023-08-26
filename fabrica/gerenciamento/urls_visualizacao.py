@@ -6,11 +6,14 @@ from .views_visualizacao import (
     lista_operador,
     lista_maquinas,
     lista_ordens_servico,
-    lista_estoques 
+    lista_estoques,
+    lista_produtos 
 )
 
 urlpatterns = [
     path('cliente/', lista_clientes, name='lista_clientes'),
+
+    path('produtos/', lista_produtos, name='lista_produtos'),
 
     path('endereco/<int:codigo>/', lista_endereco, name='lista_endereco'),
 
