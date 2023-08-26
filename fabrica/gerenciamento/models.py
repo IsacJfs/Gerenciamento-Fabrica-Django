@@ -87,7 +87,7 @@ class OrdemServico(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     produto = models.ForeignKey(Produto, on_delete=models.CASCADE)
     observacao = models.CharField(max_length=100)
-    data = models.DateField()
+    data_inicio = models.DateField()
 
 class StatusServico(models.Model):
     ordem_servico = models.ForeignKey(OrdemServico, on_delete=models.CASCADE)

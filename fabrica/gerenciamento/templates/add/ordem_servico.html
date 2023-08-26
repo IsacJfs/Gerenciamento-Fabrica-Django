@@ -17,7 +17,7 @@
                             {% csrf_token %}
                             <h3>Ordem de serviço:</h3>
                             {{ ordem_form.cliente.label_tag }} {{ ordem_form.cliente }}
-                            {{ ordem_form.datas.label_tag }}  {{ ordem_form.datas }}
+                            {{ ordem_form.data_inicio.label_tag }}  {{ ordem_form.data_inicio }}
                             {{ ordem_form.observacao.label_tag }}  {{ ordem_form.observacao }}
                             <h3>Produto</h3>
                             {{ produto_form.tipo.label_tag }}  {{ produto_form.tipo }}

@@ -59,7 +59,7 @@ def cliente_add(request):
             endereco.cliente = cliente # Associate the saved Cliente instance with the Endereco instance.
             endereco.save() # Now save the Endereco instance.
             
-            return redirect('#')
+            return redirect('../cliente')
 
     return render(request, 'add/adicionar_cliente.html', {'form': form, 'endereco_form': endereco_form })
 
@@ -140,7 +140,7 @@ def ordem_servico_add(request):
             ordem.produto = produto
             ordem.save()
 
-            return redirect('../visualizacao/ordens_servico')  # Substitua pelo nome da URL de destino
+            return redirect('../ordens_servico')  # Substitua pelo nome da URL de destino
     else:
         ordem_form = OrdemServicoForm()
         produto_form = ProdutoForm()

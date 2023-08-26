@@ -109,11 +109,12 @@ class ProdutoForm(forms.ModelForm):
 
 class OrdemServicoForm(forms.ModelForm):
     cliente = forms.ModelChoiceField(queryset=Cliente.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
-    datas = forms.DateField(input_formats=['%d/%m/%Y'], widget=forms.DateInput(format = '%d/%m/%Y', attrs={'class': 'form-control'}))
+    data_inicio = forms.DateField(input_formats=['%d/%m/%Y'], widget=forms.DateInput(format='%d/%m/%Y', attrs={'class': 'form-control'}))
     observacao = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+
     class Meta:
         model = OrdemServico
-        fields = ['id', 'cliente', 'datas', 'observacao']
+        fields = ['cliente', 'data_inicio', 'observacao']  # Note que 'datas' foi alterado para 'data'
 
 class TintaForm(forms.ModelForm):
     class Meta:
