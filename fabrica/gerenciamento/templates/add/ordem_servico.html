@@ -4,8 +4,8 @@
 
 {% block content %}
 
-<div class="row">
-    <div class="col-lg-12">
+<div class="row justify-content-center">
+    <div class="col-6">
         <div class="card">
             <div class="card-header">
                 <strong class="card-title">Adicionar Ordem de Serviço</strong>
@@ -13,13 +13,19 @@
             <div class="card-body">
                 <div>
                     <div class="card-body">
-                        <form method="post">
+                        <form method="post" id="meuFormulario">
                             {% csrf_token %}
                             <h3>Ordem de serviço:</h3>
-                            {{ ordem_form }}
-                            <h3>Produto:</h3>
-                            {{ produto_form }}
-                            <input type="submit" value="Enviar">
+                            {{ ordem_form.cliente.label_tag }} {{ ordem_form.cliente }}
+                            {{ ordem_form.datas.label_tag }}  {{ ordem_form.datas }}
+                            {{ ordem_form.observacao.label_tag }}  {{ ordem_form.observacao }}
+                            <h3>Produto</h3>
+                            {{ produto_form.tipo.label_tag }}  {{ produto_form.tipo }}
+                            {{ produto_form.cor_produto.label_tag }} {{ produto_form.cor_produto }}
+                            {{ produto_form.acabamento_produto.label_tag }} {{ produto_form.acabamento_produto }}
+                            {{ produto_form.tratamento_produto.label_tag }} {{ produto_form.tratamento_produto }}
+                            {{ produto_form.material_produto.label_tag }} {{ produto_form.material_produto }}
+                            <input class="mt-3" type="submit" value="Enviar">
                         </form>
                         </div>
                     </div>
@@ -28,5 +34,37 @@
         </div>
     </div>
 </div>
+
+
+
+
+{% block script %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#id_datas').mask('00/00/0000', {placeholder: "__/__/____"});
+        $('#meuFormulario').validate({
+            rules: {
+                datas: {
+                    required: true,
+                },
+            },
+            messages: {
+                datas: {
+                    required: "Por favor, insira a data no formato AAAA/MM/DD!",
+                },
+            },
+        });
+    });
+</script>
+    
+{% endblock script %}
+
+
+
+
 
 {% endblock content %}

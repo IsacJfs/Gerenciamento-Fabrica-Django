@@ -123,13 +123,31 @@ def produto_add(request):
         produto_form = ProdutoForm(request.POST)
         if produto_form.is_valid():
             produto_form.save()
-            return redirect('../main')  # Substitua pelo nome da URL de destino
+            return redirect('../visualizacao/produtos')  # Substitua pelo nome da URL de destino
     else:
         produto_form = ProdutoForm()
 
     return render(request, 'add/produto.html', {'produto_form': produto_form})
 
 def ordem_servico_add(request):
+    if request.method == 'POST':
+        produto_form = ProdutoForm(request.POST or None)
+        ordem_form = OrdemServicoForm(request.POST or None)
+        if produto_form.is_valid():
+            produto = produto_form.save()
+
+            ordem = ordem_form.save(commit=False)
+            ordem.produto = produto
+            ordem.save()
+
+            return redirect('../visualizacao/ordens_servico')  # Substitua pelo nome da URL de destino
+    else:
+        ordem_form = OrdemServicoForm()
+        produto_form = ProdutoForm()
+
+    return render(request, 'add/ordem_servico.html', {'ordem_form': ordem_form, 'produto_form': produto_form})
+
+def ordem_servico_add_old(request):
     ordem_form = OrdemServicoForm(request.POST or None)
     produto_form = ProdutoForm(request.POST or None)
 

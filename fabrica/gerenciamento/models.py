@@ -10,6 +10,10 @@ class Cliente(models.Model):
     email = models.EmailField()
     atividade_economica_profissao = models.CharField(max_length=255)
 
+    def __str__(self):
+        nome = self.razao_social
+        return nome
+
 class Endereco(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     rua = models.CharField(max_length=50)
@@ -75,11 +79,15 @@ class Produto(models.Model):
     tratamento_produto = models.ForeignKey(Tratamento, on_delete=models.CASCADE)
     material_produto = models.ForeignKey(Material, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.tipo
+    
 class OrdemServico(models.Model):
     id = models.AutoField(primary_key=True)
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     produto = models.ForeignKey(Produto, on_delete=models.CASCADE)
     observacao = models.CharField(max_length=100)
+    data = models.DateField()
 
 class StatusServico(models.Model):
     ordem_servico = models.ForeignKey(OrdemServico, on_delete=models.CASCADE)

@@ -4,8 +4,8 @@
 
 {% block content %}
 
-<div class="row">
-    <div class="col-lg-12">
+<div class="row justify-content-center">
+    <div class="col-6">
         <div class="card">
             <div class="card-header">
                 <strong class="card-title">Adicionar Cliente</strong>
@@ -13,7 +13,7 @@
             <div class="card-body">
                 <div>
                     <div class="card-body">
-                        <form method="post">
+                        <form method="post" id="meuFormulario">
                             {% csrf_token %}
                             <h3>Detalhes do Cliente:</h3>
                             {{ form.as_p }}
@@ -28,5 +28,52 @@
         </div>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
 
+<script>
+jQuery.validator.addMethod("#id_razao_social", function(value, element) {
+return this.optional(element) || /^[a-zA-Z]+\s+[a-zA-Z]+(\s+[a-zA-Z]+)*$/.test(value);
+}, "Por favor, insira o nome completo");
+
+$('#id_cnpj_cpf').keydown(function(){
+    var $this = $(this);
+    setTimeout(function(){
+        var value = $this.val();
+        if (value.length <= 11) {
+            $this.mask('000.000.000-009');
+        } else {
+            $this.mask('00.000.000/0000-00');
+        }
+    }, 1);
+});
+
+$(document).ready(function() {
+    $('#id_celular').mask('(00) 00000-0000', {placeholder: "(__) _____-____"});
+    $('#id_telefone').mask('(00) 00000-0000', {placeholder: "(__) _____-____"});
+    $('#id_cep').mask('00000-000', {placeholder: "_____-___"})
+    $('#meuFormulario').validate({
+        rules: {
+            email: {
+                required: true,
+                email: true
+            },
+            telefone: {
+                required: false
+            },
+            atividade_economica_profissao: {
+                required: false
+            },
+            endereco: {
+                required: true
+            },
+            cep: {
+                required: false
+            }
+        },
+        
+});
+})
+</script>
 {% endblock content %}

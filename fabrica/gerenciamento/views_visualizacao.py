@@ -18,9 +18,22 @@ def lista_produtos(request):
 def lista_endereco(request, codigo):
     cliente = Cliente.objects.get(codigo=codigo)
     endereco = Endereco.objects.get(cliente=cliente)
-    
     context = {'endereco': endereco}
     return render(request, 'visualizacao/cliente.html', context)
+
+def lista_ordens_servico(request):
+    ordens = OrdemServico.objects.select_related(
+        'cliente', 
+        'produto'
+    ).prefetch_related(
+        'produto__cor_produto',
+        'produto__acabamento_produto',
+        'produto__tratamento_produto',
+        'produto__material_produto'
+    ).all()
+    
+    context = {'ordens': ordens}
+    return render(request, 'visualizacao/ordens_servico.html', context)
 
 def lista_operador(request):
     operador = Operador.objects.all()
@@ -34,10 +47,6 @@ def lista_maquinas(request):
     context = {'extrusao': extrusao, 'corte': corte, 'impressao': impressao}
     return render(request, 'visualizacao/maquinas.html', context)
 
-def lista_ordens_servico(request):
-    ordem_servico = OrdemServico.objects.all()
-    context = {'ordem_servico': ordem_servico}
-    return render(request, 'visualizacao/ordem_servico.html', context)
 
 def lista_estoques(request):
     estoques = Cliente.objects.all()

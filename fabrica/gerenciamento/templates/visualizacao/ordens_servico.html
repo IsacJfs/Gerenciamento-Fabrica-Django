@@ -1,0 +1,36 @@
+{% extends "base/master.html" %}
+
+{% block title %}
+    Ordens de servico
+{% endblock %}
+
+{% block content %}
+<section class="col-12">
+    <h1 class="card-title">Ordens de servico</h1>
+    <table class="table table-secondary table-striped">
+        <tr>
+            <th scope="col">id</th>
+            <th scope="col">Cliente</th>
+            <th scope="col">Produto</th>
+            <th scope="col">Cor</th>
+            <th scope="col">Acabamento</th>
+            <th scope="col">Tratamento</th>
+            <th scope="col">Material</th>
+            <th scope="col">Observação</th>
+        </tr>
+        {% for ordem in ordens %}
+        <tr>
+            <td>{{ ordem.id }}</td>
+            <td>{{ ordem.cliente }}</td>
+            <td>{{ ordem.produto }}</td>
+            <td>{{ ordem.produto.cor_produto.cor_produto }}</td>
+            <td>{{ ordem.produto.acabamento_produto.acabamento_produto }}</td>
+            <td>{{ ordem.produto.tratamento_produto.tratamento_produto }}</td>
+            <td>{{ ordem.produto.material_produto.material_produto }}</td>
+            <td>{{ ordem.observacao }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</section>
+{% endblock %}

@@ -1,3 +1,4 @@
+from typing import Any, Dict
 from .models import (
         Cliente,
         Endereco,
@@ -29,7 +30,7 @@ from django import forms
 class ClienteForm(forms.ModelForm):
     class Meta:
         model = Cliente
-        fields = ['cnpj_cpf', 'razao_social', 'nome_fantasia', 'celular', 'telefone', 'email', 'atividade_economica_profissao']
+        fields = ['codigo','cnpj_cpf', 'razao_social', 'nome_fantasia', 'celular', 'telefone', 'email', 'atividade_economica_profissao']
         widgets = {
             'cnpj_cpf': forms.TextInput(attrs={'class': 'form-control'}),
             'razao_social': forms.TextInput(attrs={'class': 'form-control'}),
@@ -39,6 +40,9 @@ class ClienteForm(forms.ModelForm):
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
             'atividade_economica_profissao': forms.TextInput(attrs={'class': 'form-control'}),
         }
+
+    def clean(self) -> Dict[str, Any]:
+        return super().clean()
 
 class EnderecoForm(forms.ModelForm):
     class Meta:
@@ -93,19 +97,6 @@ class MaquinaCorteForm(forms.ModelForm):
             'modelo': forms.TextInput(attrs={'class': 'form-control'})
         }
 
-class ProdutoFormOLD(forms.ModelForm):
-    class Meta:
-        model = Produto
-        fields = ['id', 'tipo', 'cor_produto', 'acabamento_produto', 'tratamento_produto', 'material_produto']
-        widgets = {
-            'id': forms.TextInput(attrs={'class': 'form-control'}),
-            'tipo': forms.TextInput(attrs={'class': 'form-control'}),
-            'cor_produto' : forms.Select(attrs={'class': 'form-control'}),
-            'acabamento_produto' : forms.Select(attrs={'class': 'form-control'}),
-            'tratamento_produto' : forms.Select(attrs={'class': 'form-control'}),
-            'material_produto' : forms.Select(attrs={'class': 'form-control'})
-        }
-
 class ProdutoForm(forms.ModelForm):
     tipo = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     cor_produto = forms.ModelChoiceField(queryset=CorProduto.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
@@ -115,25 +106,14 @@ class ProdutoForm(forms.ModelForm):
     class Meta:
         model = Produto
         fields = ['id', 'tipo', 'cor_produto', 'acabamento_produto', 'tratamento_produto', 'material_produto']
-        # widgets = {
-        #     'id': forms.TextInput(attrs={'class': 'form-control'}),
-        #     'tipo': forms.TextInput(attrs={'class': 'form-control'}),
-        #     'cor_produto' : forms.Select(attrs={'class': 'form-control'}),
-        #     'acabamento_produto' : forms.Select(attrs={'class': 'form-control'}),
-        #     'tratamento_produto' : forms.Select(attrs={'class': 'form-control'}),
-        #     'material_produto' : forms.Select(attrs={'class': 'form-control'})
-        # }
 
 class OrdemServicoForm(forms.ModelForm):
+    cliente = forms.ModelChoiceField(queryset=Cliente.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
+    datas = forms.DateField(input_formats=['%d/%m/%Y'], widget=forms.DateInput(format = '%d/%m/%Y', attrs={'class': 'form-control'}))
+    observacao = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     class Meta:
         model = OrdemServico
-        fields = ['id', 'cliente', 'produto', 'observacao']
-        widgets = {
-            'id': forms.TextInput(attrs={'class': 'form-control'}),
-            'cliente': forms.Select(attrs={'class': 'form-control'}),
-            'produto': forms.Select(attrs={'class': 'form-control'}),
-            'observacao': forms.Select(attrs={'class': 'form-control'})
-        }
+        fields = ['id', 'cliente', 'datas', 'observacao']
 
 class TintaForm(forms.ModelForm):
     class Meta:
