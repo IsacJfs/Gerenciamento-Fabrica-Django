@@ -123,7 +123,7 @@ def produto_add(request):
         produto_form = ProdutoForm(request.POST)
         if produto_form.is_valid():
             produto_form.save()
-            return redirect('../visualizacao/produtos')  # Substitua pelo nome da URL de destino
+            return redirect('../produtos')  # Substitua pelo nome da URL de destino
     else:
         produto_form = ProdutoForm()
 
