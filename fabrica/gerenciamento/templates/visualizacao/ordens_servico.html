@@ -11,23 +11,23 @@
         <tr>
             <th scope="col">id</th>
             <th scope="col">Cliente</th>
+            <th scope="col">Data Criação</th>
             <th scope="col">Produto</th>
-            <th scope="col">Cor</th>
-            <th scope="col">Acabamento</th>
-            <th scope="col">Tratamento</th>
-            <th scope="col">Material</th>
             <th scope="col">Observação</th>
         </tr>
         {% for ordem in ordens %}
         <tr>
             <td>{{ ordem.id }}</td>
             <td>{{ ordem.cliente }}</td>
-            <td>{{ ordem.produto }}</td>
-            <td>{{ ordem.produto.cor_produto.cor_produto }}</td>
-            <td>{{ ordem.produto.acabamento_produto.acabamento_produto }}</td>
-            <td>{{ ordem.produto.tratamento_produto.tratamento_produto }}</td>
-            <td>{{ ordem.produto.material_produto.material_produto }}</td>
+            <td>{{ ordem.data_inicio }}</td>
+            <td> 
+            {% for produto in ordem.produtos.all %}
+            <!-- Display fields from Produto -->
+            {{ produto.tipo }}, {{ produto.cor_produto }}, {{ produto.acabamento_produto }}, {{ produto.tratamento_produto }}, {{ produto.material_produto }}<br>
+            {% endfor %}
+            </td>
             <td>{{ ordem.observacao }}</td>
+
         </tr>
         {% endfor %}
     </table>

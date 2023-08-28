@@ -105,16 +105,15 @@ class ProdutoForm(forms.ModelForm):
     material_produto = forms.ModelChoiceField(queryset=Material.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
     class Meta:
         model = Produto
-        fields = ['id', 'tipo', 'cor_produto', 'acabamento_produto', 'tratamento_produto', 'material_produto']
+        fields = ['ordem_servico', 'tipo', 'cor_produto', 'acabamento_produto', 'tratamento_produto', 'material_produto']
 
 class OrdemServicoForm(forms.ModelForm):
     cliente = forms.ModelChoiceField(queryset=Cliente.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
-    data_inicio = forms.DateField(input_formats=['%d/%m/%Y'], widget=forms.DateInput(format='%d/%m/%Y', attrs={'class': 'form-control'}))
     observacao = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
 
     class Meta:
         model = OrdemServico
-        fields = ['cliente', 'data_inicio', 'observacao']  # Note que 'datas' foi alterado para 'data'
+        fields = ['cliente', 'observacao']
 
 class TintaForm(forms.ModelForm):
     class Meta:

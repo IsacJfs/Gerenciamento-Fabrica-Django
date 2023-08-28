@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.forms import inlineformset_factory
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from django.template import loader
@@ -129,39 +130,28 @@ def produto_add(request):
 
     return render(request, 'add/produto.html', {'produto_form': produto_form})
 
+ProdutoFormSet = inlineformset_factory(OrdemServico, Produto, form=ProdutoForm, extra=1)
+
 def ordem_servico_add(request):
     if request.method == 'POST':
-        produto_form = ProdutoForm(request.POST or None)
-        ordem_form = OrdemServicoForm(request.POST or None)
-        if produto_form.is_valid():
-            produto = produto_form.save()
-
-            ordem = ordem_form.save(commit=False)
-            ordem.produto = produto
-            ordem.save()
-
-            return redirect('../ordens_servico')  # Substitua pelo nome da URL de destino
+        ordem_form = OrdemServicoForm(request.POST)
+        produto_formset = ProdutoFormSet(request.POST, instance=OrdemServico())
+        
+        if ordem_form.is_valid() and produto_formset.is_valid():
+            ordem_servico = ordem_form.save()
+            produtos = produto_formset.save(commit=False)
+            for produto in produtos:
+                produto.ordem_servico = ordem_servico
+                produto.save()
+            for produto in produto_formset.deleted_objects:
+                produto.delete()
+            return redirect('../ordens_servico')
     else:
         ordem_form = OrdemServicoForm()
-        produto_form = ProdutoForm()
+        produto_formset = ProdutoFormSet(instance=OrdemServico())
+        
+    return render(request, 'add/ordem_servico.html', {'ordem_form': ordem_form, 'produto_formset': produto_formset})
 
-    return render(request, 'add/ordem_servico.html', {'ordem_form': ordem_form, 'produto_form': produto_form})
-
-def ordem_servico_add_old(request):
-    ordem_form = OrdemServicoForm(request.POST or None)
-    produto_form = ProdutoForm(request.POST or None)
-
-    if request.method == 'POST':
-        if ordem_form.is_valid() and produto_form.is_valid():
-            cliente = ordem_form.save() # Save the Cliente instance first.
-            
-            produto = produto_form.save(commit=False) # Don't save the produto instance yet.
-            produto.cliente = cliente # Associate the saved Cliente instance with the produto instance.
-            produto.save() # Now save the Endereco instance.
-            
-            return redirect('#')
-
-    return render(request, 'add/ordem_servico.html', {'ordem_form': ordem_form, 'produto_form': produto_form })
 
 def tinta_add(request):
     if request.method == 'POST':

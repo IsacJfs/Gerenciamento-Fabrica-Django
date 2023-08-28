@@ -23,13 +23,7 @@ def lista_endereco(request, codigo):
 
 def lista_ordens_servico(request):
     ordens = OrdemServico.objects.select_related(
-        'cliente', 
-        'produto'
-    ).prefetch_related(
-        'produto__cor_produto',
-        'produto__acabamento_produto',
-        'produto__tratamento_produto',
-        'produto__material_produto'
+        'cliente'
     ).all()
     
     context = {'ordens': ordens}

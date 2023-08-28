@@ -5,7 +5,7 @@
 {% block content %}
 
 <div class="row justify-content-center">
-    <div class="col-6">
+    <div class="col-8">
         <div class="card">
             <div class="card-header">
                 <strong class="card-title">Adicionar Ordem de Serviço</strong>
@@ -13,20 +13,67 @@
             <div class="card-body">
                 <div>
                     <div class="card-body">
-                        <form method="post" id="meuFormulario">
+                        <form method="post" id="ordemServicoForm" class="meuFormulario">
                             {% csrf_token %}
-                            <h3>Ordem de serviço:</h3>
-                            {{ ordem_form.cliente.label_tag }} {{ ordem_form.cliente }}
-                            {{ ordem_form.data_inicio.label_tag }}  {{ ordem_form.data_inicio }}
-                            {{ ordem_form.observacao.label_tag }}  {{ ordem_form.observacao }}
-                            <h3>Produto</h3>
-                            {{ produto_form.tipo.label_tag }}  {{ produto_form.tipo }}
-                            {{ produto_form.cor_produto.label_tag }} {{ produto_form.cor_produto }}
-                            {{ produto_form.acabamento_produto.label_tag }} {{ produto_form.acabamento_produto }}
-                            {{ produto_form.tratamento_produto.label_tag }} {{ produto_form.tratamento_produto }}
-                            {{ produto_form.material_produto.label_tag }} {{ produto_form.material_produto }}
-                            <input class="mt-3" type="submit" value="Enviar">
+                            <h2>Ordem de Serviço</h2>
+                            <div class="row">
+                                <div class="col">
+                                    <h5>Cliente</h5>
+                                    {{ ordem_form.cliente }}
+                                </div>
+                                <div class="col">
+                                    <h5>Observação</h5>
+                                    {{ ordem_form.observacao }}
+                                </div>
+                            </div>
+                            <div id="produto-container">
+                                {{ produto_formset.management_form }}
+                                <h2 class="mt-3">Produtos</h2>
+                                {% for form in produto_formset %}
+                                    <div class="produto-form">
+                                        <div class="row">
+                                            <div class="col">
+                                                {{ form.tipo.label_tag }} {{ form.tipo }}
+                                            </div>
+                                            <div class="col">
+                                                {{ form.cor_produto.label_tag }} {{ form.cor_produto }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                {{ form.acabamento_produto.label_tag }} {{ form.acabamento_produto }}
+                                            </div>
+                                            <div class="col">
+                                                {{ form.tratamento_produto.label_tag }} {{ form.tratamento_produto }}
+                                            </div>
+                                            <div class="col">
+                                                {{ form.material_produto.label_tag }} {{ form.material_produto }}
+                                            </div>
+                                        </div>
+                                        <label class="form-check-label">Delete:</label>
+                                        <input class="form-check-input" type="checkbox" name="{{ form.prefix }}-DELETE">
+                                        <hr class="mb-3">
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <button class="btn btn-info" type="button" id="add-product">+ Produtos</button>
+                            <input class="btn btn-success" type="submit" value="Salvar">
                         </form>
+                        <!-- <form method="post" id="ordemServicoForm">
+                            {% csrf_token %}
+                            {{ ordem_form.as_p }}
+                            <div id="produto-container">
+                                {{ produto_formset.management_form }}
+                                {% for subform in produto_formset %}
+                                    <div class="produto-form">
+                                        {{ subform.as_p }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <button type="button" id="add-product">Add More Products</button>
+                            <input type="submit" value="Save">
+                        </form> -->
+                        
                         </div>
                     </div>
                 </div>
@@ -44,9 +91,37 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
 
 <script>
+document.addEventListener("DOMContentLoaded", function() {
+    const addProductButton = document.getElementById("add-product");
+    const productContainer = document.getElementById("produto-container");
+
+    addProductButton.addEventListener("click", function() {
+        const productForms = document.querySelectorAll(".produto-form");
+        const lastProductForm = productForms[productForms.length - 1];
+        const newProductForm = lastProductForm.cloneNode(true);
+
+        // Clear the input fields in the cloned form
+        const inputs = newProductForm.querySelectorAll("input, select, textarea");
+        inputs.forEach(input => {
+            input.value = "";
+        });
+
+        // Update the TOTAL_FORMS count
+        const totalForms = document.getElementById("id_produtos-TOTAL_FORMS");
+        const formIdx = parseInt(totalForms.value);
+        totalForms.value = formIdx + 1;
+
+        // Update the name and id attributes of the new form fields
+        const regex = new RegExp(`-${formIdx - 1}-`, 'g');
+        newProductForm.innerHTML = newProductForm.innerHTML.replace(regex, `-${formIdx}-`);
+
+        productContainer.appendChild(newProductForm);
+    });
+});
+
     $(document).ready(function() {
         $('#id_datas').mask('00/00/0000', {placeholder: "__/__/____"});
-        $('#meuFormulario').validate({
+        $('.meuFormulario').validate({
             rules: {
                 datas: {
                     required: true,

@@ -71,30 +71,29 @@ class CorProduto(models.Model):
     def __str__(self):
         return self.cor_produto
 
-class Produto(models.Model):
+class OrdemServico(models.Model):
     id = models.AutoField(primary_key=True)
+    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+    observacao = models.CharField(max_length=100)
+    data_inicio = models.DateField(auto_now_add=True)
+
+class Produto(models.Model):
+    ordem_servico = models.ForeignKey(OrdemServico, related_name='produtos', on_delete=models.CASCADE)
     tipo = models.CharField(max_length=100)
     cor_produto = models.ForeignKey(CorProduto, on_delete=models.CASCADE)
     acabamento_produto = models.ForeignKey(Acabamento, on_delete=models.CASCADE)
     tratamento_produto = models.ForeignKey(Tratamento, on_delete=models.CASCADE)
     material_produto = models.ForeignKey(Material, on_delete=models.CASCADE)
-
+    
     def __str__(self):
         return self.tipo
     
-class OrdemServico(models.Model):
-    id = models.AutoField(primary_key=True)
-    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
-    produto = models.ForeignKey(Produto, on_delete=models.CASCADE)
-    observacao = models.CharField(max_length=100)
-    data_inicio = models.DateField()
-
 class StatusServico(models.Model):
     ordem_servico = models.ForeignKey(OrdemServico, on_delete=models.CASCADE)
     operador = models.ForeignKey(Operador, on_delete=models.CASCADE)
     status = models.CharField(max_length=20)
-    hora_alteracao = models.DateTimeField()
-    data_alteracao = models.DateField()
+    hora_alteracao = models.DateTimeField(auto_now_add=True)
+    data_alteracao = models.DateField(auto_now_add=True)
 
 class Tinta(models.Model):
     id = models.AutoField(primary_key=True)
