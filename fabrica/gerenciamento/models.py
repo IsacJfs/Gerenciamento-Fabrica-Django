@@ -130,7 +130,7 @@ class IngredienteOrdemServico(models.Model):
     def __str__(self):
         ordem = self.ordemservico
         produto_ordem = self.produto
-        nome = f'{ordem}/{produto_ordem}'
+        nome = f'{ordem} - Produto: {produto_ordem}'
         return nome
 
 class Extrusao(models.Model):

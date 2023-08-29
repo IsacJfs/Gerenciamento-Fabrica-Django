@@ -262,6 +262,12 @@ def extrusao_form_add(request):
 
     return render(request, 'add/formulario_extrusao.html', {'form': form})
 
+def get_produtos(request):
+    ordem_servico_id = request.GET.get('ordem_servico')
+    produtos = Produto.objects.filter(ordem_servico_id=ordem_servico_id)
+    produto_list = list(produtos.values('id', 'tipo'))
+    return JsonResponse({'produtos': produto_list})
+
 def extrusao_form_add_old(request):
     if request.method == 'POST':
         produto_form = ExtrusaoForm(request.POST)
@@ -277,6 +283,19 @@ def ingredientes_por_produto(request, produto_id):
     ingredientes = IngredienteOrdemServico.objects.filter(ordemservico_id=produto_id).values('ingrediente', 'qtde')
     ingredientes_list = list(ingredientes)
     return JsonResponse({'ingredientes': ingredientes_list}, safe=False)
+
+def get_ingredientes(request):
+    produto_id = request.GET.get('produto')
+    ingredientes = IngredienteOrdemServico.objects.filter(produto_id=produto_id).select_related('ingrediente')
+
+    ingredientes_list = []
+    for ingrediente in ingredientes:
+        ingredientes_list.append({
+            'ingrediente': str(ingrediente.ingrediente),  # Assuming __str__ method is defined in Ingredientes model
+            'qtde': ingrediente.qtde
+        })
+
+    return JsonResponse({'ingredientes': ingredientes_list})
 # -------------- Fim views de cadastro ------------------------
 
 

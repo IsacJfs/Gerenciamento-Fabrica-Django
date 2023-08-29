@@ -16,7 +16,8 @@ from .views_cadastro import (
     ingrediente_produto_add,
     produtos_por_ordem,
     extrusao_form_add,
-    ingredientes_por_produto
+    get_produtos,
+    get_ingredientes
 )
 
 urlpatterns = [
@@ -62,5 +63,7 @@ urlpatterns = [
 
     path('formulario_extrusao/', extrusao_form_add, name='formulario_extrusao'),
     
-    path('ingrediente_produto/<int:produto_id>/', ingredientes_por_produto, name='ingredientes_por_produto'),
+    path('get_produtos/', get_produtos, name='get_produtos'),
+
+    path('get_ingredientes/', get_ingredientes, name='get_ingredientes'),
 ]
