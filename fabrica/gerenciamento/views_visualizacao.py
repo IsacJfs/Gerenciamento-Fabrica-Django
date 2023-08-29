@@ -47,3 +47,9 @@ def lista_estoques(request):
     context = {'estoques': estoques}
     return render(request, 'visualizacao/estoques.html', context)
 
+def lista_extrusao(request):
+    extrusao = Extrusao.objects.all()
+    
+    context = {'extrusao': extrusao}
+    return render(request, 'visualizacao/lista_extrusao.html', context)
+

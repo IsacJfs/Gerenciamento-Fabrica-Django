@@ -1,0 +1,26 @@
+{% extends "base/master.html" %}
+
+{% block title %}
+    Ordens de servico
+{% endblock %}
+
+{% block content %}
+<section class="col-12">
+    <h1 class="card-title">Lista extruões</h1>
+    <table class="table table-secondary table-striped">
+        <tr>
+            <th scope="col">
+                Produtos para serem atualizados
+            </th>
+        </tr>
+        {% for extrusao_p in extrusao %}
+        <tr>
+            <td>
+                {{ extrusao_p }}
+                <a class="btn btn-info ms-5" href="{% url 'atualizar_extrusao' extrusao_p.id %}">Atualizar</a><br>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</section>
+{% endblock %}

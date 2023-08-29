@@ -18,17 +18,8 @@
                             {% csrf_token %}
                             {{ form.operador.label_tag }} {{ form.operador }}<br>
                             {{ form.maquina_extrusao.label_tag }} {{ form.maquina_extrusao }}<br>
-                            {{ form.hora_inicio.label_tag }} {{ form.hora_inicio }}<br>
-                            {{ form.hora_fim.label_tag }} {{ form.hora_fim }}<br>
-                            {{ form.data_inicio.label_tag }} {{ form.data_inicio }}<br>
-                            {{ form.data_fim.label_tag }} {{ form.data_fim }}<br>
                             {{ form.produto_ingrediente.label_tag }} {{ form.produto_ingrediente }}<br>
-                            <h4>Selecionar ingredientes para produção</h4>
-                            {{ form.ordem_servico.label_tag }} {{ form.ordem_servico }}<br>
-                            {{ form.produto.label_tag }} {{ form.produto }}<br>
-                            <div class="table" id="ingredientes_container">
-                                <!-- IngredienteOrdemServico fields will be populated here -->
-                            </div>
+                            {{ form.status.label_tag }} {{ form.status }}<br>
                             <input type="submit" value="Submit">
                         </form>
                     </div>
@@ -40,44 +31,3 @@
 
 
 {% endblock content %}
-{% block script %}
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $('#id_ordem_servico').change(function() {
-            var selectedOrdemServico = $(this).val();
-            $.ajax({
-                url: '/get_produtos/',
-                data: {
-                    'ordem_servico': selectedOrdemServico
-                },
-                success: function(data) {
-                    var options = '<option value="">---------</option>';
-                    for (var i = 0; i < data.produtos.length; i++) {
-                        options += '<option value="' + data.produtos[i].id + '">' + data.produtos[i].tipo + '</option>';
-                    }
-                    $('#id_produto').html(options);
-                }
-            });
-        });
-
-        $('#id_produto').change(function() {
-            var selectedProduto = $(this).val();
-            $.ajax({
-                url: '/get_ingredientes/',
-                data: {
-                    'produto': selectedProduto
-                },
-                success: function(data) {
-                    var html = '';
-                    for (var i = 0; i < data.ingredientes.length; i++) {
-                        html += '<p>Ingrediente: ' + data.ingredientes[i].ingrediente + ', Quantidade(kg): ' + data.ingredientes[i].qtde + '</p>';
-                    }
-                    $('#ingredientes_container').html(html);
-                }
-            });
-        });
-    });
-</script>
-
-{% endblock script %}

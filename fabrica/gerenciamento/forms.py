@@ -20,7 +20,6 @@ from .models import (
         Extrusao,
         Impressao,
         Corte,
-        ProdutoExtrusao,
         ProdutoImpressao,
         ProdutoCorte
         )
@@ -152,28 +151,19 @@ class IngredienteOrdemServicoForm(forms.ModelForm):
         fields = ['ingrediente', 'qtde']
 
 class ExtrusaoForm(forms.ModelForm):
-    ordem_servico = forms.ModelChoiceField(queryset=OrdemServico.objects.all(),widget=forms.Select(attrs={'class': 'form-control'}))
-    produto = forms.ModelChoiceField(queryset=Produto.objects.none(), widget=forms.Select(attrs={'class': 'form-control'}))  
-    operador = forms.ModelChoiceField(queryset=Operador.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
-    maquina_extrusao = forms.ModelChoiceField(queryset=MaquinaExtrusao.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
-    hora_inicio = forms.TimeField(widget=forms.TimeInput(attrs={'class': 'form-control'}))
-    hora_fim = forms.TimeField(widget=forms.TimeInput(attrs={'class': 'form-control'}))
-    data_fim = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control'}))
-    produto_ingrediente = forms.ModelChoiceField(queryset=IngredienteOrdemServico.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
-    class Meta:
-        model = Extrusao
-        fields = ['operador','maquina_extrusao','hora_inicio','hora_fim','data_fim','produto_ingrediente', 'ordem_servico', 'produto']
+    operador = forms.ModelChoiceField(queryset=Operador.objects.all().distinct(), widget=forms.Select(attrs={'class': 'form-select'}))
+    maquina_extrusao = forms.ModelChoiceField(queryset=MaquinaExtrusao.objects.all(), widget=forms.Select(attrs={'class': 'form-select'}))
+    hora_fim = forms.TimeField(input_formats=['%H:%M'], widget=forms.TimeInput(format='%H:%M', attrs={'class': 'form-control'}), required=False)
+    data_fim = forms.DateField(input_formats=['%d/%m/%Y'],widget=forms.DateInput(format='%d/%m/%Y', attrs={'class': 'form-control'}), required=False)
+    produto_ingrediente = forms.ModelChoiceField(queryset=IngredienteOrdemServico.objects.all(), widget=forms.Select(attrs={'class': 'form-select'}))
+    status = forms.ChoiceField(choices=Extrusao.STATUS_CHOICES, widget=forms.Select(attrs={'class': 'form-select'}))
+    tipo_produto = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    quantidade = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}), required=False)
+    desperdicio = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}), required=False)
 
-class ExtrusaoFormOld(forms.ModelForm):
-    operador = forms.ModelChoiceField(queryset=Operador.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
-    maquina_extrusao = forms.ModelChoiceField(queryset=MaquinaExtrusao.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
-    hora_inicio = forms.TimeField(widget=forms.TimeInput(attrs={'class': 'form-control'}))
-    hora_fim = forms.TimeField(widget=forms.TimeInput(attrs={'class': 'form-control'}))
-    data_fim = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control'}))
-    produto_ingrediente = forms.ModelChoiceField(queryset=IngredienteOrdemServico.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
     class Meta:
         model = Extrusao
-        fields = ['operador','maquina_extrusao','hora_inicio','hora_fim','data_fim','produto_ingrediente']
+        fields = ['operador', 'maquina_extrusao', 'hora_fim', 'data_fim', 'produto_ingrediente', 'status', 'tipo_produto', 'quantidade', 'desperdicio']
 
 class ImpressaoForm(forms.ModelForm):
     class Meta:
@@ -232,3 +222,10 @@ class CorForm(forms.ModelForm):
         widgets = {
             'cor_produto': forms.Select(attrs={'class': 'form-control'}),
         }
+
+class ExtrusaoUpdateForm(ExtrusaoForm):
+    operador = forms.ModelChoiceField(queryset=Operador.objects.all().distinct(), widget=forms.Select(attrs={'class': 'form-select'}), required=False)
+    maquina_extrusao = forms.ModelChoiceField(queryset=MaquinaExtrusao.objects.all(), widget=forms.Select(attrs={'class': 'form-select'}), required=False)
+    produto_ingrediente = forms.ModelChoiceField(queryset=IngredienteOrdemServico.objects.all(), widget=forms.Select(attrs={'class': 'form-select'}), required=False)
+    class Meta(ExtrusaoForm.Meta):
+        fields = ['hora_fim', 'data_fim', 'tipo_produto', 'quantidade', 'desperdicio', 'status']

@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 class Cliente(models.Model):
     codigo = models.AutoField(primary_key=True)
@@ -35,6 +36,10 @@ class MaquinaExtrusao(models.Model):
     id = models.AutoField(primary_key=True)
     marca = models.CharField(max_length=100)
     modelo = models.CharField(max_length=100)
+
+    def __str__(self):
+        nome = self.marca
+        return nome
 
 class MaquinaImpressao(models.Model):
     id = models.AutoField(primary_key=True)
@@ -134,13 +139,33 @@ class IngredienteOrdemServico(models.Model):
         return nome
 
 class Extrusao(models.Model):
+    STATUS_CHOICES = [
+        ('iniciado', 'Iniciado'),
+        ('finalizado', 'Finalizado'),
+    ]
+
     operador = models.ForeignKey(Operador, on_delete=models.CASCADE)
     maquina_extrusao = models.ForeignKey(MaquinaExtrusao, on_delete=models.CASCADE)
-    hora_inicio = models.DateTimeField()
-    hora_fim = models.DateTimeField()
-    data_inicio = models.DateField(auto_now_add=True)
-    data_fim = models.DateField()
-    produto_ingrediente = models.ForeignKey(IngredienteOrdemServico, related_name='produto_ordem_servico', on_delete=models.CASCADE)
+    hora_inicio = models.TimeField(null=True, blank=True)
+    data_inicio = models.DateField(null=True, blank=True)
+    hora_fim = models.TimeField(null=True, blank=True)
+    data_fim = models.DateField(null=True, blank=True)
+    produto_ingrediente = models.ForeignKey(IngredienteOrdemServico, on_delete=models.CASCADE)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='iniciado')
+    tipo_produto = models.CharField(max_length=100, null=True, blank=True)
+    quantidade = models.FloatField(null=True, blank=True)
+    desperdicio = models.FloatField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.operador} - {self.maquina_extrusao} - {self.produto_ingrediente} - {self.status}"
+    
+    def save(self, *args, **kwargs):
+        # Preenchimento automático de data_inicio e hora_inicio se eles não estiverem definidos
+        if self.data_inicio is None:
+            self.data_inicio = timezone.localtime().date()
+        if self.hora_inicio is None:
+            self.hora_inicio = timezone.localtime().time()
+        super(Extrusao, self).save(*args, **kwargs)
 
 class Impressao(models.Model):
     ordem_servico = models.ForeignKey(OrdemServico, on_delete=models.CASCADE)
@@ -157,14 +182,6 @@ class Corte(models.Model):
     hora_inicio = models.DateTimeField()
     hora_fim = models.DateTimeField()
     data = models.DateField()
-
-class ProdutoExtrusao(models.Model):
-    id = models.AutoField(primary_key=True)
-    ordemservico = models.ForeignKey(OrdemServico, on_delete=models.CASCADE)
-    item_produzido = models.ForeignKey(Extrusao, on_delete=models.CASCADE)
-    descricao = models.CharField(max_length=10)
-    qtde = models.CharField(max_length=10)
-    peso = models.CharField(max_length=10)
 
 class ProdutoImpressao(models.Model):
     id = models.AutoField(primary_key=True)

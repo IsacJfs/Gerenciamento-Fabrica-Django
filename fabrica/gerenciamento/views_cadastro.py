@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.forms import inlineformset_factory
 from django.shortcuts import get_object_or_404
 from django.core.serializers import serialize
+from django.utils import timezone
+from django.urls import reverse
 from django.http import JsonResponse
 from django.http import HttpResponse
 from django.template import loader
@@ -23,7 +25,8 @@ from .forms import (ClienteForm,
         AcabamentoForm,
         TratamentoForm,
         MaterialForm,
-        CorForm)
+        CorForm,
+        ExtrusaoUpdateForm)
 from .models import (
         Cliente,
         Endereco,
@@ -45,7 +48,6 @@ from .models import (
         Extrusao,
         Impressao,
         Corte,
-        ProdutoExtrusao,
         ProdutoImpressao,
         ProdutoCorte
         )
@@ -248,15 +250,20 @@ def extrusao_form_add(request):
     if request.method == 'POST':
         form = ExtrusaoForm(request.POST)
         if form.is_valid():
-            extrusao = form.save()
-            
-            # Aqui você pode adicionar lógica para salvar os ingredientes relacionados ao produto_ingrediente selecionado
-            produto_ingrediente_selected = form.cleaned_data['produto_ingrediente']
-            ingredientes_related = IngredienteOrdemServico.objects.filter(produto=produto_ingrediente_selected)
-            
-            # Fazer algo com ingredientes_related, talvez salvá-los em outro modelo ou processá-los de alguma forma
-            
-            return redirect('../produtos')
+            form.save()
+
+            # Obter os IDs de OrdemServico e Produto do campo produto_ingrediente
+            ordem_servico_id = form.cleaned_data['produto_ingrediente'].ordemservico.id
+            produto_id = form.cleaned_data['produto_ingrediente'].produto.id
+
+            # Construir a URL de redirecionamento com os parâmetros de consulta
+            redirect_url = reverse('ingredientes_extrusao')
+            params = f'?ordem_servico_id={ordem_servico_id}&produto_id={produto_id}'
+            full_url = f'{redirect_url}{params}'
+
+            return redirect(full_url)
+        else:
+            print(form.errors)
     else:
         form = ExtrusaoForm()
 
@@ -284,6 +291,29 @@ def ingredientes_por_produto(request, produto_id):
     ingredientes_list = list(ingredientes)
     return JsonResponse({'ingredientes': ingredientes_list}, safe=False)
 
+def ingredientes_extrusao(request):
+    # Inicialmente, pegamos todos os objetos
+    queryset = IngredienteOrdemServico.objects.all()
+
+    # Obtemos os parâmetros de filtro da URL
+    ordem_servico_id = request.GET.get('ordem_servico_id')
+    produto_id = request.GET.get('produto_id')
+
+    # Aplicamos os filtros conforme os parâmetros
+    if ordem_servico_id:
+        queryset = queryset.filter(ordemservico__id=ordem_servico_id)
+
+    if produto_id:
+        queryset = queryset.filter(produto__id=produto_id)
+
+    # Preparamos o contexto para o template
+    context = {
+        'ingredientes': queryset
+    }
+
+    # Renderizamos o template com o contexto
+    return render(request, 'add/ingredientes_extrusao.html', context)
+
 def get_ingredientes(request):
     produto_id = request.GET.get('produto')
     ingredientes = IngredienteOrdemServico.objects.filter(produto_id=produto_id).select_related('ingrediente')
@@ -296,6 +326,28 @@ def get_ingredientes(request):
         })
 
     return JsonResponse({'ingredientes': ingredientes_list})
+
+def atualizar_extrusao(request, extrusao_id):
+    extrusao = get_object_or_404(Extrusao, id=extrusao_id)
+
+    if request.method == 'POST':
+        form = ExtrusaoUpdateForm(request.POST, instance=extrusao)
+        if form.is_valid():
+            form.save()
+            return redirect('lista_extrusao')
+        else:
+            print('form.invalid')
+            print(form.errors)
+    else:
+        form = ExtrusaoUpdateForm(instance=extrusao)
+        # Preencher automaticamente a data e hora de início se ainda não estiverem definidas
+        if not extrusao.hora_inicio:
+            extrusao.hora_inicio = timezone.localtime().time()
+        if not extrusao.data_inicio:
+            extrusao.data_inicio = timezone.localtime().date()
+        extrusao.save()
+
+    return render(request, 'add/atualizar_extrusao.html', {'form': form})
 # -------------- Fim views de cadastro ------------------------
 
 

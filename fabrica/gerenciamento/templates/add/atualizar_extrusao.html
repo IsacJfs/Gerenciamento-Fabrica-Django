@@ -1,0 +1,34 @@
+
+
+{% extends "base/master.html" %}
+
+{% block title %}
+    Ordens de servico
+{% endblock %}
+
+{% block content %}
+<section class="row justify-content-center">
+    <div class="col-6">
+        <h1 class="card-title">Finalizar Extrusão</h1>
+        <form method="post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-6">
+                    {{ form.hora_fim.label_tag }} {{ form.hora_fim }}
+                </div>
+                <div class="col-6">
+                    {{ form.data_fim.label_tag }} {{ form.data_fim }} <br>
+                </div>
+            </div>
+            {{ form.tipo_produto.label_tag }} {{ form.tipo_produto }}<br>
+            {{ form.quantidade.label_tag }} {{ form.quantidade }}<br>
+            {{ form.desperdicio.label_tag }} {{ form.desperdicio }}<br>
+            {{ form.status.label_tag }} {{ form.status }}<br>
+            <button class="btn btn-success" type="submit">Atualizar</button>
+        </form>
+        
+        <a class="btn btn-info mt-3" href="{% url 'lista_extrusao' %}">Voltar para a lista de extrusões</a>
+    </div>
+
+</section>
+{% endblock %}

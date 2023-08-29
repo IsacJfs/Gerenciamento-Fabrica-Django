@@ -1,0 +1,28 @@
+{% extends "base/master.html" %}
+
+{% block title %}
+    Formulário Extrusao
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-6">
+        <div class="card">
+            <div class="card-header">
+                <strong class="card-title">Lista de Ingredientes para produção</strong>
+            </div>
+            <div class="card-body">
+                <div>
+                    <div class="card-body">
+                        {% for ingrediente in ingredientes %}
+                        <p>{{ ingrediente.ingrediente.ingrediente }} - Quantidade: {{ ingrediente.qtde }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}
