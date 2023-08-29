@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.forms import inlineformset_factory
 from django.shortcuts import get_object_or_404
+from django.core.serializers import serialize
+from django.http import JsonResponse
 from django.http import HttpResponse
 from django.template import loader
 from .forms import (ClienteForm,
@@ -203,7 +205,78 @@ def corte_add(request):
         form = CorteForm()
     return render(request, 'seu_template.html', {'form': form})
 
+def ingrediente_produto_add(request):
+    ordens = OrdemServico.objects.all()
+    produtos = Produto.objects.none()
+    form = IngredienteOrdemServicoForm()
 
+    if request.method == 'POST':
+        # Obter os valores dos campos 'ingrediente' e 'qtde' de todos os formulários
+        ingredientes = request.POST.getlist('ingrediente')
+        qtde = request.POST.getlist('qtde')
+
+        # Obter os IDs da ordem de serviço e do produto selecionados
+        ordem_id = request.POST.get('ordem_servico')
+        produto_id = request.POST.get('produto')
+
+        # Obter os objetos da ordem de serviço e do produto
+        ordem = OrdemServico.objects.get(id=ordem_id)
+        produto = Produto.objects.get(id=produto_id)
+
+        # Iterar sobre todos os formulários de ingredientes e criar novos objetos IngredienteOrdemServico
+        for i in range(len(ingredientes)):
+            IngredienteOrdemServico.objects.create(
+                ingrediente_id=ingredientes[i],
+                qtde=qtde[i],
+                ordemservico=ordem,
+                produto=produto
+            )
+
+        return redirect('/main')
+
+    return render(request, 'add/ingrediente_produto.html', {
+        'form': form,
+        'ordens': ordens,
+        'produtos': produtos,
+    })
+
+def produtos_por_ordem(request, ordem_id):
+    produtos = list(Produto.objects.filter(ordem_servico_id=ordem_id).values('id', 'tipo'))
+    return JsonResponse(produtos, safe=False)
+
+def extrusao_form_add(request):
+    if request.method == 'POST':
+        form = ExtrusaoForm(request.POST)
+        if form.is_valid():
+            extrusao = form.save()
+            
+            # Aqui você pode adicionar lógica para salvar os ingredientes relacionados ao produto_ingrediente selecionado
+            produto_ingrediente_selected = form.cleaned_data['produto_ingrediente']
+            ingredientes_related = IngredienteOrdemServico.objects.filter(produto=produto_ingrediente_selected)
+            
+            # Fazer algo com ingredientes_related, talvez salvá-los em outro modelo ou processá-los de alguma forma
+            
+            return redirect('../produtos')
+    else:
+        form = ExtrusaoForm()
+
+    return render(request, 'add/formulario_extrusao.html', {'form': form})
+
+def extrusao_form_add_old(request):
+    if request.method == 'POST':
+        produto_form = ExtrusaoForm(request.POST)
+        if produto_form.is_valid():
+            produto_form.save()
+            return redirect('../produtos')  # Substitua pelo nome da URL de destino
+    else:
+        produto_form = ExtrusaoForm()
+
+    return render(request, 'add/formulario_extrusao.html', {'produto_form': produto_form})
+
+def ingredientes_por_produto(request, produto_id):
+    ingredientes = IngredienteOrdemServico.objects.filter(ordemservico_id=produto_id).values('ingrediente', 'qtde')
+    ingredientes_list = list(ingredientes)
+    return JsonResponse({'ingredientes': ingredientes_list}, safe=False)
 # -------------- Fim views de cadastro ------------------------
 
 

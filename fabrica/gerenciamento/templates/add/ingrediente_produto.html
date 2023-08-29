@@ -1,0 +1,99 @@
+{% extends "base/master.html" %}
+
+{% block title %}Adicionar Produto{% endblock title %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-6">
+        <div class="card">
+            <div class="card-header">
+                <strong class="card-title">Adicionar Ingredientes de fabricação</strong>
+            </div>
+            <div class="card-body">
+                <div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            <label for="ordem_servico">Selecione a Ordem de Serviço:</label>
+                            <select class="form-select" id="ordem_servico" name="ordem_servico">
+                                {% for ordem in ordens %}
+                                    <option value="{{ ordem.id }}">{{ ordem.id }}</option>
+                                {% endfor %}
+                            </select>
+                        
+                            <label for="produto">Selecione o Produto:</label>
+                            <select class="form-select" id="produto" name="produto">
+                                <!-- Opções de produtos serão preenchidas via JavaScript -->
+                            </select>
+                            <div id="produto-container">
+                                <div class="produto-form">
+                                    <div class="row">
+                                        <div class="col">
+                                            {{ form.ingrediente.label_tag }} {{ form.ingrediente }}
+                                        </div>
+                                        <div class="col">
+                                            {{ form.qtde.label_tag }} {{ form.qtde }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <button class="btn btn-info" type="button" id="add-product">+ Ingredientes</button>
+                                <input class="btn btn-success" type="submit" value="Salvar">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock content %}
+{% block script %}
+<script>
+    // JavaScript para atualizar a lista de produtos com base na ordem de serviço selecionada
+    const ordemServicoSelect = document.getElementById('ordem_servico');
+    const produtoSelect = document.getElementById('produto');
+
+    ordemServicoSelect.addEventListener('change', function() {
+        const ordemId = this.value;
+        fetch(`/api/produtos_por_ordem/${ordemId}/`)
+            .then(response => response.json())
+            .then(data => {
+                let options = '';
+                data.forEach(produto => {
+                    options += `<option value="${produto.id}">${produto.tipo}</option>`;
+                });
+                produtoSelect.innerHTML = options;
+            });
+    });
+
+    let formIdx = 0;
+document.addEventListener("DOMContentLoaded", function() {
+    const addProductButton = document.getElementById("add-product");
+    const productContainer = document.getElementById("produto-container");
+
+    addProductButton.addEventListener("click", function() {
+        formIdx++;
+        const newProductForm = productContainer.cloneNode(true);
+        
+        // Atualizar os atributos name e id
+        const formFields = newProductForm.querySelectorAll("input, select, textarea");
+        formFields.forEach((field) => {
+            const oldName = field.getAttribute("name");
+            const oldId = field.getAttribute("id");
+            if (oldName) {
+                field.setAttribute("name", oldName.replace("-0-", `-${formIdx}-`));
+            }
+            if (oldId) {
+                field.setAttribute("id", oldId.replace("-0-", `-${formIdx}-`));
+            }
+        });
+
+        productContainer.parentNode.appendChild(newProductForm);
+    });
+});
+</script>
+{% endblock script %}

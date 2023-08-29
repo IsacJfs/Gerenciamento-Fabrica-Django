@@ -28,6 +28,9 @@ class Operador(models.Model):
     nome = models.CharField(max_length=100)
     cargo = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.nome
+
 class MaquinaExtrusao(models.Model):
     id = models.AutoField(primary_key=True)
     marca = models.CharField(max_length=100)
@@ -77,6 +80,11 @@ class OrdemServico(models.Model):
     observacao = models.CharField(max_length=100)
     data_inicio = models.DateField(auto_now_add=True)
 
+    def __str__(self):
+        valor = self.id
+        nome = f'Orden nº({valor})'
+        return nome
+
 class Produto(models.Model):
     ordem_servico = models.ForeignKey(OrdemServico, related_name='produtos', on_delete=models.CASCADE)
     tipo = models.CharField(max_length=100)
@@ -109,19 +117,30 @@ class Ingredientes(models.Model):
     id = models.AutoField(primary_key=True)
     ingrediente = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.ingrediente
+
 class IngredienteOrdemServico(models.Model):
     id = models.AutoField(primary_key=True)
     ordemservico = models.ForeignKey(OrdemServico, on_delete=models.CASCADE)
+    produto = models.ForeignKey(Produto, related_name='ingredientes_ordem_servico', on_delete=models.CASCADE)
     ingrediente = models.ForeignKey(Ingredientes, on_delete=models.CASCADE)
-    qtde = models.CharField(max_length=10)
+    qtde = models.FloatField()
+
+    def __str__(self):
+        ordem = self.ordemservico
+        produto_ordem = self.produto
+        nome = f'{ordem}/{produto_ordem}'
+        return nome
 
 class Extrusao(models.Model):
-    ordem_servico = models.ForeignKey(OrdemServico, on_delete=models.CASCADE)
     operador = models.ForeignKey(Operador, on_delete=models.CASCADE)
     maquina_extrusao = models.ForeignKey(MaquinaExtrusao, on_delete=models.CASCADE)
     hora_inicio = models.DateTimeField()
     hora_fim = models.DateTimeField()
-    data = models.DateField()
+    data_inicio = models.DateField(auto_now_add=True)
+    data_fim = models.DateField()
+    produto_ingrediente = models.ForeignKey(IngredienteOrdemServico, related_name='produto_ordem_servico', on_delete=models.CASCADE)
 
 class Impressao(models.Model):
     ordem_servico = models.ForeignKey(OrdemServico, on_delete=models.CASCADE)

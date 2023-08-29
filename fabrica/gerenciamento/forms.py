@@ -144,27 +144,23 @@ class IngredientesForm(forms.ModelForm):
         }
 
 class IngredienteOrdemServicoForm(forms.ModelForm):
+    ingrediente = forms.ModelChoiceField(queryset=Ingredientes.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
+    qtde = forms.DecimalField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+
     class Meta:
-        model = IngredienteOrdemServico
-        fields = ['id', 'ordemservico', 'ingrediente']
-        widgets = {
-            'id': forms.TextInput(attrs={'class': 'form-control'}),
-            'ordemservico': forms.Select(attrs={'class': 'form-control'}),
-            'ingrediente': forms.Select(attrs={'class': 'form-control'})
-        }
+        model = IngredienteOrdemServico  # Adicione esta linha para especificar o modelo
+        fields = ['ingrediente', 'qtde']
 
 class ExtrusaoForm(forms.ModelForm):
+    operador = forms.ModelChoiceField(queryset=Operador.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
+    maquina_extrusao = forms.ModelChoiceField(queryset=MaquinaExtrusao.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
+    hora_inicio = forms.TimeField(widget=forms.TimeInput(attrs={'class': 'form-control'}))
+    hora_fim = forms.TimeField(widget=forms.TimeInput(attrs={'class': 'form-control'}))
+    data_fim = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control'}))
+    produto_ingrediente = forms.ModelChoiceField(queryset=IngredienteOrdemServico.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
     class Meta:
         model = Extrusao
-        fields = ['ordem_servico', 'operador', 'maquina_extrusao', 'hora_inicio', 'hora_fim', 'data']
-        widgets = {
-            'ordem_servico': forms.Select(attrs={'class': 'form-control'}),
-            'operador': forms.Select(attrs={'class': 'form-control'}),
-            'maquina_extrusao': forms.Select(attrs={'class': 'form-control'}),
-            'hora_inicio': forms.DateTimeInput(attrs={'class': 'form-control'}),
-            'hora_fim': forms.DateTimeInput(attrs={'class': 'form-control'}),
-            'data': forms.DateInput(attrs={'class': 'form-control'})
-        }
+        fields = ['operador','maquina_extrusao','hora_inicio','hora_fim','data_fim','produto_ingrediente']
 
 class ImpressaoForm(forms.ModelForm):
     class Meta:

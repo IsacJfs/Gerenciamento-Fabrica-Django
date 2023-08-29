@@ -12,7 +12,11 @@ from .views_cadastro import (
     ingredientes_add,
     extrusao_add,
     impressao_add,
-    corte_add
+    corte_add,
+    ingrediente_produto_add,
+    produtos_por_ordem,
+    extrusao_form_add,
+    ingredientes_por_produto
 )
 
 urlpatterns = [
@@ -43,6 +47,8 @@ urlpatterns = [
     path('ingredientes/', ingredientes_add, name='ingredientes_create'),
     path('ingredientes/<int:id>/', ingredientes_add, name='ingredientes_update'),
 
+    path('ingrediente_produto/', ingrediente_produto_add, name='ingrediente_produto_create'),
+
     path('extrusao/', extrusao_add, name='extrusao_create'),
     path('extrusao/<int:id>/', extrusao_add, name='extrusao_update'),
 
@@ -51,4 +57,10 @@ urlpatterns = [
 
     path('corte/', corte_add, name='corte_create'),
     path('corte/<int:id>/', corte_add, name='corte_update'),
+
+    path('api/produtos_por_ordem/<int:ordem_id>/', produtos_por_ordem, name='produtos_por_ordem'),
+
+    path('formulario_extrusao/', extrusao_form_add, name='formulario_extrusao'),
+    
+    path('ingrediente_produto/<int:produto_id>/', ingredientes_por_produto, name='ingredientes_por_produto'),
 ]

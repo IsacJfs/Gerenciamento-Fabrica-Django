@@ -1,0 +1,57 @@
+{% extends "base/master.html" %}
+
+{% block title %}
+    Formulário Extrusao
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-6">
+        <div class="card">
+            <div class="card-header">
+                <strong class="card-title">Formulário Extrusao</strong>
+            </div>
+            <div class="card-body">
+                <div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            <h3>Produto</h3>
+                            {{ form.as_p }}
+                            <input class="mt-3" type="submit" value="Enviar">
+                        </form>
+                        <div id="ingredientes-list">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}
+{% block script %}
+<script>
+    const produtoIngredienteSelect = document.getElementById('id_produto_ingrediente');  // Ajuste o ID conforme necessário
+    
+    produtoIngredienteSelect.addEventListener('change', function() {
+        const produtoIngredienteId = this.value;
+        console.log('chegou aqui')
+        console.log(produtoIngredienteSelect)
+        console.log(this.value)
+        fetch(`http://127.0.0.1:8000/ingredientes_por_produto/${produtoIngredienteId}/`)
+            .then(response => response.json())
+            .then(data => {
+                let ingredientes = data.ingredientes;
+                let ingredientesHtml = '<ul>';
+                    ingredientes.forEach(ingrediente => {
+                        ingredientesHtml += `<li>${ingrediente.ingrediente} - ${ingrediente.qtde}</li>`;
+                    });
+                    ingredientesHtml += '</ul>';
+                    document.getElementById('ingredientes-list').innerHTML = ingredientesHtml;
+                })
+    });
+</script>
+{% endblock script %}
