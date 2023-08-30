@@ -13,7 +13,7 @@
             padding: 25px 20px 0 20px;
             background-color: white;
             overflow-x: hidden;
-            }          
+            }        
     </style>
 </head>
 <body>
@@ -42,6 +42,7 @@
                     </center>
                     
                     <ul class="navbar-nav justify-content-start flex-grow-1 pe-3">
+                        {% if user.is_authenticated %}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Consultar
@@ -49,7 +50,7 @@
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="/cliente">Cliente</a></li>
                                 <li><a class="dropdown-item" href="/produtos">Estoque</a></li>
-                                <li><a class="dropdown-item" href="#">Produção</a></li>
+                                <li><a class="dropdown-item" href="/processo_extrusao">Produção</a></li>
                                 <li><a class="dropdown-item" href="#">Funcionários</a></li>
                                 <li>
                                     <hr class="dropdown-divider">
@@ -91,6 +92,16 @@
                         <li class="nav-item">
                             <a class="nav-link" href="#">Impressão</a>
                         </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/accounts/login">Entrar</a>
+                        </li>
+                        {% endif %}
+                        {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link text-danger" href="/accounts/logout">Sair</a>
+                        </li>
+                        {% endif %}
                     </ul>
                 </div>
                 </div>

@@ -8,7 +8,8 @@ from .views_visualizacao import (
     lista_ordens_servico,
     lista_estoques,
     lista_produtos,
-    lista_extrusao 
+    lista_extrusao,
+    processo_extrusao 
 )
 
 urlpatterns = [
@@ -27,5 +28,7 @@ urlpatterns = [
     path('estoque/', lista_estoques, name='lista_estoques'),
 
     path('lista_extrusao/', lista_extrusao, name='lista_extrusao'),
+
+    path('processo_extrusao/', processo_extrusao, name='processo_extrusao'),
 
 ]

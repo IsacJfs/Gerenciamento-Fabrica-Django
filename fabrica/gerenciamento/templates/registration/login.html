@@ -1,0 +1,27 @@
+{% extends "base/master.html" %}
+
+{% block title %}
+    Login
+{% endblock %}
+
+{% block content %}
+<section>
+<div class="row justify-content-center">
+    <div class="col-6">
+        <div class="card auth-card">
+            <div class="card-body ">
+                <h4 class="card-title text-center mb-4">
+                    Entrar no sistema
+                </h4>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form }}
+                    <input class="form-control" type="hidden" name="next" value="{{ next }}">
+                    <br><button type="submit" class="btn btn-primary btn-block mt-3">Entrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+{% endblock %}

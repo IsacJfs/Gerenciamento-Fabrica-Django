@@ -49,7 +49,10 @@ def lista_estoques(request):
 
 def lista_extrusao(request):
     extrusao = Extrusao.objects.all()
-    
     context = {'extrusao': extrusao}
     return render(request, 'visualizacao/lista_extrusao.html', context)
 
+def processo_extrusao(request):
+    extrusao = Extrusao.objects.select_related('operador', 'maquina_extrusao', 'produto_ingrediente').all()
+    context = {'extrusao': extrusao}
+    return render(request, 'visualizacao/processo_extrusao.html', context)

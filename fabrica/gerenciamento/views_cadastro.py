@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.forms import inlineformset_factory
 from django.shortcuts import get_object_or_404
 from django.core.serializers import serialize
+from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.urls import reverse
 from django.http import JsonResponse
@@ -52,6 +53,7 @@ from .models import (
         ProdutoCorte
         )
 
+@login_required
 def cliente_add(request):
     form = ClienteForm(request.POST or None)
     endereco_form = EnderecoForm(request.POST or None)
@@ -68,6 +70,7 @@ def cliente_add(request):
 
     return render(request, 'add/adicionar_cliente.html', {'form': form, 'endereco_form': endereco_form })
 
+@login_required
 def operador_add(request, id=None):
     if id:
         instance = get_object_or_404(Operador, id=id)
@@ -83,6 +86,7 @@ def operador_add(request, id=None):
     context = {'form': form}
     return render(request, 'add/operador.html', context)
 
+@login_required
 def maquina_extrusao_add(request):
     if request.method == 'POST':
         form = MaquinaExtrusaoForm(request.POST)
@@ -93,6 +97,7 @@ def maquina_extrusao_add(request):
         form = MaquinaExtrusaoForm()
     return render(request, 'add/maquina_extrusao.html', {'form': form})
 
+@login_required
 def maquina_impressao_add(request):
     if request.method == 'POST':
         form = MaquinaImpressaoForm(request.POST)
@@ -103,6 +108,7 @@ def maquina_impressao_add(request):
         form = MaquinaImpressaoForm()
     return render(request, 'add/maquina_impressao.html', {'form': form})
 
+@login_required
 def maquina_corte_add(request):
     if request.method == 'POST':
         form = MaquinaCorteForm(request.POST)
@@ -113,6 +119,7 @@ def maquina_corte_add(request):
         form = MaquinaCorteForm()
     return render(request, 'add/maquina_corte.html', {'form': form})
 
+@login_required
 def produto_add_old(request):
     if request.method == 'POST':
         form = ProdutoForm(request.POST)
@@ -123,6 +130,7 @@ def produto_add_old(request):
         form = ProdutoForm()
     return render(request, 'add/produto.html', {'form': form})
 
+@login_required
 def produto_add(request):
     if request.method == 'POST':
         produto_form = ProdutoForm(request.POST)
@@ -136,6 +144,7 @@ def produto_add(request):
 
 ProdutoFormSet = inlineformset_factory(OrdemServico, Produto, form=ProdutoForm, extra=1)
 
+@login_required
 def ordem_servico_add(request):
     if request.method == 'POST':
         ordem_form = OrdemServicoForm(request.POST)
@@ -156,7 +165,7 @@ def ordem_servico_add(request):
         
     return render(request, 'add/ordem_servico.html', {'ordem_form': ordem_form, 'produto_formset': produto_formset})
 
-
+@login_required
 def tinta_add(request):
     if request.method == 'POST':
         form = TintaForm(request.POST)
@@ -167,6 +176,7 @@ def tinta_add(request):
         form = TintaForm()
     return render(request, 'add/tinta.html', {'form': form})
 
+@login_required
 def ingredientes_add(request):
     if request.method == 'POST':
         form = IngredientesForm(request.POST)
@@ -177,6 +187,7 @@ def ingredientes_add(request):
         form = IngredientesForm()
     return render(request, 'add/ingredientes.html', {'form': form})
 
+@login_required
 def extrusao_add(request):
     if request.method == 'POST':
         form = ExtrusaoForm(request.POST)
@@ -187,6 +198,7 @@ def extrusao_add(request):
         form = ExtrusaoForm()
     return render(request, 'seu_template.html', {'form': form})
 
+@login_required
 def impressao_add(request):
     if request.method == 'POST':
         form = ImpressaoForm(request.POST)
@@ -197,6 +209,7 @@ def impressao_add(request):
         form = ImpressaoForm()
     return render(request, 'seu_template.html', {'form': form})
 
+@login_required
 def corte_add(request):
     if request.method == 'POST':
         form = CorteForm(request.POST)
@@ -207,6 +220,7 @@ def corte_add(request):
         form = CorteForm()
     return render(request, 'seu_template.html', {'form': form})
 
+@login_required
 def ingrediente_produto_add(request):
     ordens = OrdemServico.objects.all()
     produtos = Produto.objects.none()
@@ -234,7 +248,7 @@ def ingrediente_produto_add(request):
                 produto=produto
             )
 
-        return redirect('/main')
+        return redirect('/ordens_servico')
 
     return render(request, 'add/ingrediente_produto.html', {
         'form': form,
@@ -242,10 +256,12 @@ def ingrediente_produto_add(request):
         'produtos': produtos,
     })
 
+@login_required
 def produtos_por_ordem(request, ordem_id):
     produtos = list(Produto.objects.filter(ordem_servico_id=ordem_id).values('id', 'tipo'))
     return JsonResponse(produtos, safe=False)
 
+@login_required
 def extrusao_form_add(request):
     if request.method == 'POST':
         form = ExtrusaoForm(request.POST)
@@ -269,12 +285,14 @@ def extrusao_form_add(request):
 
     return render(request, 'add/formulario_extrusao.html', {'form': form})
 
+@login_required
 def get_produtos(request):
     ordem_servico_id = request.GET.get('ordem_servico')
     produtos = Produto.objects.filter(ordem_servico_id=ordem_servico_id)
     produto_list = list(produtos.values('id', 'tipo'))
     return JsonResponse({'produtos': produto_list})
 
+@login_required
 def extrusao_form_add_old(request):
     if request.method == 'POST':
         produto_form = ExtrusaoForm(request.POST)
@@ -286,11 +304,13 @@ def extrusao_form_add_old(request):
 
     return render(request, 'add/formulario_extrusao.html', {'produto_form': produto_form})
 
+@login_required
 def ingredientes_por_produto(request, produto_id):
     ingredientes = IngredienteOrdemServico.objects.filter(ordemservico_id=produto_id).values('ingrediente', 'qtde')
     ingredientes_list = list(ingredientes)
     return JsonResponse({'ingredientes': ingredientes_list}, safe=False)
 
+@login_required
 def ingredientes_extrusao(request):
     # Inicialmente, pegamos todos os objetos
     queryset = IngredienteOrdemServico.objects.all()
@@ -314,6 +334,7 @@ def ingredientes_extrusao(request):
     # Renderizamos o template com o contexto
     return render(request, 'add/ingredientes_extrusao.html', context)
 
+@login_required
 def get_ingredientes(request):
     produto_id = request.GET.get('produto')
     ingredientes = IngredienteOrdemServico.objects.filter(produto_id=produto_id).select_related('ingrediente')
@@ -327,6 +348,7 @@ def get_ingredientes(request):
 
     return JsonResponse({'ingredientes': ingredientes_list})
 
+@login_required
 def atualizar_extrusao(request, extrusao_id):
     extrusao = get_object_or_404(Extrusao, id=extrusao_id)
 
